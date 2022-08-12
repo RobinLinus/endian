@@ -1,0 +1,62 @@
+<style>
+	body{
+		font-family: system-ui;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		background-color: rgb(34,38,42);
+		color: white;
+	}
+	h1{
+		margin-bottom: 8px;
+	}
+
+	h3{
+		margin-top: 0;
+		opacity: 0.5;
+	}
+
+	textarea{
+		width: 520px;
+		margin: 24px;
+		background: none;
+		color: white;
+	}
+	div{
+		height: 32px;
+		display: flex;
+		flex-direction: column;
+	}
+	div:not(:empty):before{
+		font-size: 12px;
+		opacity: 0.7;
+		content: "Click to copy to clipboard";
+	}
+
+	div[notify]:after{
+		margin-top: 8px;
+		font-size: 12px;
+		color: red;
+		content: "Copied to clipboard";	
+		text-align: right;
+		width: 100%;
+		font-weight: bold;
+	}
+</style>
+<h1>Swap Endianness</h1>
+<h3>Convert from little endian to big endian and vice versa.</h3>
+<textarea id=$input autofocus spellcheck="false" placeholder="Enter a hex string"></textarea>
+<div id=$output></div>
+<script>
+	const endian = hex => hex.replace(/^(.(..)*)$/, "0$1").match(/../g).reverse().join("")
+	
+	$input.oninput = _ => $output.innerText = endian($input.value)
+
+	$output.onclick = _ => {
+		navigator.clipboard.writeText($output.innerText)
+		$output.setAttribute('notify',1)
+		setTimeout(_=>$output.removeAttribute('notify'), 3000)
+	}
+</script>
